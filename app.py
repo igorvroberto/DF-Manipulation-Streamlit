@@ -4,6 +4,7 @@ import numpy as np
 import os
 import matplotlib as plt
 import seaborn as sns
+import xlrd
 
 class FileReference:
     def __init__(self, filename):
@@ -38,9 +39,17 @@ def main():
     st.markdown(html_subtitle, unsafe_allow_html=True)
 
     file  = st.file_uploader("Escolha o arquivo que deseja analisar", type = ["csv","xls","xlsx"])
-    if file is not None:
-         st.success("Arquivo importado com êxito")
-    df = pd.read_csv(file)
+    
+    
+    @st.cache(hash_funcs={FileReference: hash_file_reference})
+    def try_read_df(data):
+        try:
+            return pd.read_csv(data)
+        except:
+            return pd.read_excel(data)
+    if file:
+        df = try_read_df(file)
+
 
     if st.checkbox("Número de linhas"):
         st.code("df.shape[0]")
