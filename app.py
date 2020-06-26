@@ -32,12 +32,13 @@ def main():
     """
     st.markdown(html_subtitle, unsafe_allow_html=True)
 
-
-    file  = st.file_uploader('Selecione o arquivo .csv que deseja analisar', type = ['csv', 'xls', 'xlsx'])
+    st.markdown('Selecione o arquivo **csv** que deseja analisar')
+    file  = st.file_uploader('', type = ['csv', 'xls', 'xlsx'])
     if file is None:
         st.error('Por favor, selecione um arquivo')
     else:
         df=pd.read_csv(file)
+        st.success('Arquivo importado com sucesso')
 
     
         if st.checkbox("Número de linhas"):
@@ -56,7 +57,6 @@ def main():
             st.code("df.describe()")
         st.dataframe(df.describe())
 
-        st.markdown("**Visualizando o dataframe**")
         rows_number = st.slider("Escolha o número de linhas que deseja visualizar", min_value=1, max_value=100)
         st.dataframe(df.head(rows_number))
     
@@ -76,6 +76,26 @@ def main():
             st.code("df_categorico = df.select_dtypes(include=['object'])")
             st.code("df_categorico.columns.unique()")
         st.write(df_categorico.columns.unique())
+
+        st.markdown("**Escolha abaixo o tipo do gráfico que deseja visualizar**")
+        graphic_plot = st.selectbox('',['Gráfico de correlação','Gráfico de distribuição'])
+        if graphic_plot == 'Gráfico de correlação':
+            fig, ax = plt.subplots(figsize=(8, 8))
+            sns.heatmap(df.corr(), annot=True)
+            st.pyplot()
+        elif graphic_plot == 'Gráfico de distribuição':
+                option = st.selectbox('Selecione o atributo', df.columns)
+                #Para dados categóricos é plotado um gráfico de barras
+                if df[option].dtype == object:
+                    sns.set_style('darkgrid')
+                    fig, ax = plt.subplots(figsize=(8, 8))
+                    sns.countplot(x=df[option], data=df)
+                    plt.xticks(rotation=90)
+                    st.pyplot()  
+                #Para dados numéricos é plotado um histograma
+                else:
+                    sns.distplot(df[option], bins=10)
+                    st.pyplot()
 
 
 if __name__ == "__main__":
