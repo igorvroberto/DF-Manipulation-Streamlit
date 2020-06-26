@@ -1,16 +1,45 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import base64
+import os
+import matplotlib as plt
+import seaborn as sns
+
+class FileReference:
+    def __init__(self, filename):
+        self.filename = filename
+
+def hash_file_reference(file_reference):
+    filename = file_reference.filename
+    return (filename, os.path.getmtime(filename))
 
 
-st.title("Data Science")
-st.subheader("Manipulação de dataframes utilizando a biblioteca Pandas")
-st.text("Selecione a caixa de marcação caso deseje ver o código de execução de cada função")
-st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Pandas_logo.svg/1200px-Pandas_logo.svg.png", width=200)
-file  = st.file_uploader("Escolha o arquivo .csv que deseja analisar", type = "csv")
-if file is not None:
-    st.success("Arquivo importado com êxito")
+def main():
+
+    html_title = """
+    <div style='background-color:#ffffff;text-align:center'>
+    <p style='color:#000000;font-size:40px;'>Data Science</p>
+    </div>
+    """
+    st.markdown(html_title, unsafe_allow_html=True)
+
+    html_subtitle = """
+    <div style='background-color:#ffffff;text-align:center'>
+    <p style='color:#000000;font-size:20px;'>Manipulação de dataframe com Pandas</p>
+    </div>
+    """
+    st.markdown(html_subtitle, unsafe_allow_html=True)
+
+    html_subtitle = """
+    <div style='background-color:#ffffff;text-align:center'>
+    <p style='color:#000000;font-size:15px;'>Selecione a caixa de marcação caso deseje visualizar o código</p>
+    </div>
+    """
+    st.markdown(html_subtitle, unsafe_allow_html=True)
+
+    file  = st.file_uploader("Escolha o arquivo que deseja analisar", type = ["csv","xls","xlsx"])
+    if file is not None:
+         st.success("Arquivo importado com êxito")
     df = pd.read_csv(file)
 
     if st.checkbox("Número de linhas"):
@@ -50,3 +79,5 @@ if file is not None:
         st.code("df_categorico.columns.unique()")
     st.write(df_categorico.columns.unique()) 
     
+if __name__ == "__main__":
+    main()
