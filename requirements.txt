@@ -1,6 +1,7 @@
-streamlit==0.62.0
+blinker==1.4
 seaborn==0.10.1
-numpy==1.16.4
 pandas==0.24.2
+streamlit==0.62.0
 matplotlib==3.2.2
 xlrd==1.2.0
+numpy==1.16.4
