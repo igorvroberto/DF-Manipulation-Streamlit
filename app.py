@@ -8,16 +8,8 @@ import os
 import xlrd
 
 
-class FileReference:
-    def __init__(self, filename):
-        self.filename = filename
-
-def hash_file_reference(file_reference):
-    filename = file_reference.filename
-    return (filename, os.path.getmtime(filename))
-
-
 def main():
+
 
     html_title = """
     <div style='background-color:#ffffff;text-align:center'>
@@ -25,6 +17,7 @@ def main():
     </div>
     """
     st.markdown(html_title, unsafe_allow_html=True)
+
     html_subtitle = """
     <div style='background-color:#ffffff;text-align:center'>
     <p style='color:#000000;font-size:20px;'>Manipulação de dataframe com Pandas</p>
@@ -39,19 +32,14 @@ def main():
     """
     st.markdown(html_subtitle, unsafe_allow_html=True)
 
-    file  = st.file_uploader('Selecione o arquivo .csv que deseja analisar', type = ["csv", "xls", "xlsx"])
+
+    file  = st.file_uploader('Selecione o arquivo .csv que deseja analisar', type = ['csv', 'xls', 'xlsx'])
+    if file is None:
+        st.error('Por favor, selecione um arquivo')
+    else:
+        df=pd.read_csv(file)
+
     
-
-    @st.cache(hash_funcs={FileReference: hash_file_reference})
-    def try_read_df(data):
-        try:
-            return pd.read_csv(data)
-        except:
-            return pd.read_excel(data)
-        if file:
-            df = try_read_df(file)
-
-    if file is not None:
         if st.checkbox("Número de linhas"):
             st.code("df.shape[0]")
         st.markdown(df.shape[0])
@@ -88,6 +76,7 @@ def main():
             st.code("df_categorico = df.select_dtypes(include=['object'])")
             st.code("df_categorico.columns.unique()")
         st.write(df_categorico.columns.unique())
+
 
 if __name__ == "__main__":
     main()
