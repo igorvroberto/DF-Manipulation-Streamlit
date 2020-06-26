@@ -32,12 +32,15 @@ def main():
     """
     st.markdown(html_subtitle, unsafe_allow_html=True)
 
+
     st.markdown('Selecione o arquivo **csv** que deseja analisar')
     file  = st.file_uploader('', type = ['csv', 'xls', 'xlsx'])
+    st.markdown('Escolha o separador dos dados')
+    separador = st.selectbox('',[';', ',', '.'])
     if file is None:
         st.error('Por favor, selecione um arquivo')
     else:
-        df=pd.read_csv(file)
+        df=pd.read_csv(file, sep=separador)
         st.success('Arquivo importado com sucesso')
 
     
